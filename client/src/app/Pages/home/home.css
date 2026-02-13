@@ -1,0 +1,165 @@
+/* Section fits content; no extra space below */
+#home {
+  min-height: auto;
+  height: auto;
+  padding-bottom: 2rem;
+}
+
+.home-typewriter {
+  opacity: 1;
+}
+
+.home-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: home-blink 1s step-end infinite;
+}
+
+/* 3D avatar image (right side) – obvious tilt and depth */
+#home .home-avatar-wrap {
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+
+#home .home-avatar-3d {
+  transform-style: preserve-3d;
+  box-shadow:
+    20px 20px 40px rgba(0, 0, 0, 0.5),
+    -10px -10px 30px rgba(0, 0, 0, 0.2);
+  will-change: transform;
+  animation: home-avatar-float 4s ease-in-out infinite;
+}
+
+@keyframes home-avatar-float {
+  0%, 100% {
+    transform: perspective(800px) rotateY(-22deg) rotateX(8deg) translateY(0);
+  }
+  50% {
+    transform: perspective(800px) rotateY(-20deg) rotateX(6deg) translateY(-12px);
+  }
+}
+
+@keyframes home-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Tablet: 641px–1023px – stacked layout, fit content, no huge gap */
+@media (min-width: 641px) and (max-width: 1023px) {
+  #home {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 3rem 1.5rem 2.5rem;
+  }
+
+  #home .relative.z-10 {
+    height: auto;
+    align-items: center;
+    padding-top: 0;
+  }
+
+  #home .max-w-5xl {
+    gap: 2rem;
+    flex-direction: column;
+  }
+
+  #home .home-avatar-wrap {
+    min-height: 0;
+    order: 2;
+    flex: 0 0 auto;
+  }
+
+  #home .home-avatar-3d {
+    max-width: 200px;
+    width: 100%;
+  }
+
+  /* Left column: slight scale for tablet */
+  #home .flex-1.max-w-xl {
+    order: 1;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  #home .flex-1.max-w-xl .home-typewriter,
+  #home .flex-1.max-w-xl p {
+    text-align: center;
+  }
+
+  #home .flex-1.max-w-xl .flex.mt-4.flex-wrap {
+    justify-content: center;
+  }
+}
+
+/* Small screens: prevent overflow, scale content, remove avatar gap */
+@media (max-width: 640px) {
+  #home {
+    padding: 4rem 1rem 2rem;
+    overflow-x: hidden;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  #home .relative.z-10 {
+    align-items: flex-start;
+    padding-top: 1rem;
+    height: auto;
+  }
+
+  #home .max-w-5xl {
+    gap: 1.5rem;
+    max-width: 100%;
+  }
+
+  /* Hide entire avatar column so it takes no space and no gap below content */
+  #home .home-avatar-wrap {
+    display: none !important;
+  }
+
+  #home img[alt="Avatar"] {
+    display: none !important;
+  }
+
+  #home .home-typewriter {
+    font-size: 1.125rem !important;
+  }
+
+  #home h1 {
+    font-size: 1.875rem !important;
+    line-height: 1.2;
+  }
+
+  #home h1 span.text-white {
+    font-size: 2.25rem !important;
+  }
+
+  #home p.mt-4 {
+    font-size: 0.9375rem !important;
+    margin-top: 0.75rem !important;
+  }
+
+  #home .flex.mt-4.flex-wrap {
+    margin-top: 1rem !important;
+    gap: 0.5rem;
+  }
+
+  #home .flex.mt-4.flex-wrap a {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  #home .flex.mt-6 {
+    margin-top: 1rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  #home h1 {
+    font-size: 1.5rem !important;
+  }
+
+  #home h1 span.text-white {
+    font-size: 1.875rem !important;
+  }
+}

@@ -1,0 +1,92 @@
+<section class="projects-section" id="projects">
+  <div class="projects-bg" [class]="'projects-bg ' + currentProject.bgClass"></div>
+
+  <h2 class="projects-page-title">My Work</h2>
+
+  <!-- Branding behind card (optional) -->
+  <div class="projects-branding" aria-hidden="true">
+    <span class="projects-brand-name">Pranjal</span>
+    <span class="projects-brand-tag">CREATIVITY POWERHOUSE</span>
+  </div>
+
+  <!-- Carousel: one card visible -->
+  <div class="projects-carousel">
+    <button
+      type="button"
+      class="projects-carousel-btn projects-carousel-btn-prev"
+      aria-label="Previous project"
+      (click)="prev()"
+    >
+      ‹
+    </button>
+
+    <div class="projects-card-wrap">
+      @for (proj of projects; track proj.id) {
+        <div
+          class="projects-card"
+          [class.projects-card-active]="currentIndex === $index"
+          [style.backgroundImage]="'url(' + proj.wallpaper + ')'"
+        >
+          <div class="projects-card-overlay"></div>
+          <div class="projects-card-content">
+            <h3 class="projects-card-title">{{ proj.title }}</h3>
+            <p class="projects-card-tagline">{{ proj.tagline }}</p>
+            <a
+              [href]="proj.liveUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="projects-card-explore"
+            >
+              {{ proj.exploreText }}
+            </a>
+          </div>
+          <nav class="projects-card-nav" aria-label="Site navigation">
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="/#skills">Skills</a>
+            <a href="/#projects">Work</a>
+            <a href="/#experience">Experience</a>
+            <a href="/#contact">Contact</a>
+          </nav>
+        </div>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="projects-carousel-btn projects-carousel-btn-next"
+      aria-label="Next project"
+      (click)="next()"
+    >
+      ›
+    </button>
+  </div>
+
+  <!-- View Project CTA -->
+  <div class="projects-cta-wrap">
+    <a
+      [href]="currentProject.liveUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="projects-cta-btn"
+    >
+      View Project
+    </a>
+  </div>
+
+  <!-- Dots -->
+  <div class="projects-dots" role="tablist" aria-label="Project slides">
+    @for (proj of projects; track proj.id) {
+      <button
+        type="button"
+        class="projects-dot"
+        [class.projects-dot-active]="currentIndex === $index"
+        [attr.aria-selected]="currentIndex === $index"
+        [attr.aria-label]="'Project ' + ($index + 1) + ': ' + proj.title"
+        (click)="goTo($index)"
+      >
+        {{ proj.title }}
+      </button>
+    }
+  </div>
+</section>

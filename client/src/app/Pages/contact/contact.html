@@ -1,0 +1,122 @@
+<div class="contact-root">
+  <!-- Notification overlay: fixed to viewport so it's always visible on top -->
+  <div class="contact-notification-overlay" aria-live="polite">
+    @if (notification) {
+      <div class="contact-notification contact-notification--{{ notification.type }}" role="alert">
+        <span class="contact-notification-icon">
+          @if (notification.type === 'success') {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          } @else {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          }
+        </span>
+        <span class="contact-notification-message">{{ notification.message }}</span>
+      </div>
+    }
+  </div>
+
+  <section class="contact-section" id="contact">
+    <div class="contact-bg" aria-hidden="true">
+      <div class="contact-stars"></div>
+      <div class="contact-moon" aria-hidden="true"></div>
+    </div>
+
+    <div class="contact-inner">
+      <div class="contact-visual" aria-hidden="true">
+        <img src="/Astra.png" alt="" class="contact-visual-img" />
+      </div>
+
+      <div class="contact-form-wrap">
+        <div class="contact-form-card">
+          <div class="contact-form-header">
+            <h2 class="contact-form-title">Get in touch</h2>
+            <p class="contact-form-subtitle">Send a message — I’ll reply to your email.</p>
+          </div>
+
+          <form
+            #contactForm
+            class="contact-form"
+            (ngSubmit)="onSubmit(contactForm); $event.preventDefault()"
+          >
+            <label class="contact-label" for="contact-name">Your Name&nbsp;*</label>
+            <input
+              id="contact-name"
+              name="name"
+              type="text"
+              class="contact-input"
+              placeholder="Your Name"
+              required
+            />
+
+            <label class="contact-label" for="contact-email">Your Email&nbsp;*</label>
+            <input
+              id="contact-email"
+              name="email"
+              type="email"
+              class="contact-input"
+              placeholder="Your Email"
+              required
+            />
+
+            <label class="contact-label" for="contact-service">Service Needed&nbsp;*</label>
+            <select id="contact-service" name="service" class="contact-select" required>
+              <option value="" disabled selected>Something in mind?</option>
+              <option value="web">Web Development</option>
+              <option value="frontend">Frontend / UI</option>
+              <option value="fullstack">Full Stack Project</option>
+              <option value="consulting">Consulting</option>
+              <option value="other">Other</option>
+            </select>
+
+            <label class="contact-label" for="contact-message">Explain Your Idea&nbsp;*</label>
+            <textarea
+              id="contact-message"
+              name="message"
+              class="contact-textarea"
+              placeholder="Explain your idea..."
+              rows="4"
+              required
+            ></textarea>
+
+            <button type="submit" class="contact-submit" [disabled]="sending">
+              {{ sending ? 'Sending...' : 'Send Message' }}
+            </button>
+          </form>
+
+          @if (error) {
+            <p class="contact-error">{{ error }}</p>
+          }
+          @if (submitted) {
+            <p class="contact-success">Thanks! I'll get back to you soon.</p>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

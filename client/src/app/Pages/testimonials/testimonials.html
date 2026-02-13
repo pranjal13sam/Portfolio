@@ -1,0 +1,21 @@
+<section class="testimonials-section" id="testimonials">
+  <h2 class="testimonials-title">What People Say</h2>
+
+  <div class="testimonials-grid">
+    @for (t of testimonials; track t.id) {
+      <article class="testimonial-card">
+        <img
+          [src]="t.avatar"
+          [alt]="t.name"
+          class="testimonial-avatar"
+          width="96"
+          height="96"
+          loading="lazy"
+        />
+        <blockquote class="testimonial-quote">"{{ t.quote }}"</blockquote>
+        <p class="testimonial-name">{{ t.name }}</p>
+        <p class="testimonial-meta">{{ t.role }} at {{ t.company }}</p>
+      </article>
+    }
+  </div>
+</section>

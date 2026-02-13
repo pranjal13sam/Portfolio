@@ -1,0 +1,106 @@
+.skills-section {
+  margin-top: -3rem;
+  padding: 4rem 0 5rem;
+  background: #050508;
+  position: relative;
+  overflow: hidden;
+}
+
+.skills-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(34, 197, 94, 0.06), transparent);
+  pointer-events: none;
+}
+
+.skills-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.skills-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.skills-title-gradient {
+  background: linear-gradient(90deg, #22d3ee, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.skills-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.skills-marquee-wrap {
+  overflow: hidden;
+  width: 100%;
+  user-select: none;
+}
+
+.skills-marquee {
+  display: flex;
+  width: max-content;
+  animation: skills-scroll 35s linear infinite;
+}
+
+.skills-track {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 0 2rem;
+  flex-shrink: 0;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  color: #22d3ee;
+}
+
+.skill-item .skill-icon-inner,
+.skill-item app-skill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.skill-item app-skill-icon ::ng-deep .skill-icon-inner,
+.skill-item app-skill-icon ::ng-deep svg {
+  width: 48px;
+  height: 48px;
+  color: #22d3ee;
+  fill: #22d3ee;
+}
+
+.skill-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+}
+
+@keyframes skills-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

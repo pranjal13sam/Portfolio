@@ -1,0 +1,35 @@
+<section class="skills-section" id="skills">
+  <div class="skills-header">
+    <h2 class="skills-title">
+      <span class="text-cyan-400">My</span>
+      <span class="skills-title-gradient"> Skills</span>
+    </h2>
+    <p class="skills-subtitle">Modern Applications | Modern Technologies</p>
+  </div>
+
+  <div class="skills-marquee-wrap">
+    <div class="skills-marquee">
+
+      <!-- Track 1 -->
+      <div class="skills-track">
+        @for (skill of skills; track skill.id) {
+          <div class="skill-item">
+            <i [class]="getIcon(skill.id)"></i>
+            <span class="skill-name">{{ skill.name }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Track 2 (duplicate for animation) -->
+      <div class="skills-track" aria-hidden="true">
+        @for (skill of skills; track skill.id) {
+          <div class="skill-item">
+            <i [class]="getIcon(skill.id)"></i>
+            <span class="skill-name">{{ skill.name }}</span>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+</section>

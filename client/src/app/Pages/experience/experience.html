@@ -1,0 +1,25 @@
+<section class="experience-section" id="experience">
+  <h2 class="experience-title">Experience</h2>
+
+  <div class="experience-timeline">
+    <div class="experience-line" aria-hidden="true"></div>
+
+    @for (exp of experiences; track exp.id) {
+      <div
+        class="experience-item"
+        [class.experience-item-above]="exp.above"
+        [class.experience-item-below]="!exp.above"
+      >
+        <div class="experience-marker" aria-hidden="true"></div>
+        <article class="experience-card">
+          <h3 class="experience-card-title">{{ exp.title }}</h3>
+          <p class="experience-card-meta">
+            {{ exp.company }} {{ exp.location ? '| ' + exp.location : '' }} 
+          </p>
+          <p class="experience-card-meta"> {{ exp.period }}</p>
+          <p class="experience-card-desc">{{ exp.description }}</p>
+        </article>
+      </div>
+    }
+  </div>
+</section>

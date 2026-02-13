@@ -1,0 +1,25 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 transition-[clip-path,opacity] duration-700 ease-in-out"
+  [class.opacity-100]="isOpen"
+  [class.opacity-0]="!isOpen"
+  [class.pointer-events-none]="!isOpen"
+  [class.clip-open]="isOpen"
+  [class.clip-close]="!isOpen"
+>
+  <!-- Close -->
+  <button class="absolute top-6 right-6 text-white cursor-pointer" (click)="close()">✕</button>
+
+  <!-- Menu -->
+  <ul class="space-y-6 text-center">
+    <li *ngFor="let item of menuItems" class="menu-item">
+      <a
+        class="text-3xl text-white font-semibold hover:text-pink-400 transition"
+        routerLink="/"
+        [fragment]="item.toLowerCase()"
+        (click)="close()"
+      >
+        {{ item }}
+      </a>
+    </li>
+  </ul>
+</div>

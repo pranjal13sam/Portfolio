@@ -1,0 +1,64 @@
+<section class="relative py-16 md:py-24 bg-[#050508]" id="about">
+  <div class="w-full max-w-5xl mx-auto px-6 sm:px-8">
+    <!-- Intro block: profile pic + name, description, stats, CTAs (same alignment as hero) -->
+    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-14 mb-16 md:mb-20">
+      <div class="flex-shrink-0">
+        <img
+          [src]="profilePhoto"
+          [alt]="fullName"
+          class="w-48 h-48 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-cyan-400/30 bg-gradient-to-br from-cyan-400/20 to-teal-500/20"
+        />
+      </div>
+      <div class="flex-1 min-w-0 flex flex-col items-start text-left">
+        <h2 class="font-bold tracking-tight text-3xl md:text-4xl lg:text-5xl text-emerald-400">
+          {{ fullName }}
+        </h2>
+        <p class="text-white/70 font-medium text-lg mt-1">Full Stack Developer</p>
+        <p class="text-white/80 text-base md:text-lg mt-4 max-w-lg leading-relaxed">
+          I build scalable, modern applications with a strong focus on clean architecture,
+          delightful UX, and performance. My toolkit spans Java, React, Next.js, TypeScript,
+          Tailwind CSS, and Restful API— bringing ideas to life from concept to production with
+          robust APIs and smooth interfaces.
+        </p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <div
+            *ngFor="let stat of stats"
+            class="px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm"
+          >
+            <span class="text-white/60 text-xs font-medium uppercase tracking-wide">{{
+              stat.label
+            }}</span>
+            <span class="block font-semibold">{{ stat.value }}</span>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-4 mt-6">
+          <a
+            href="#projects"
+            class="bg-white text-black font-semibold py-2.5 px-6 rounded-lg hover:bg-white/90 transform hover:-translate-y-0.5 transition-all inline-block text-center no-underline"
+          >
+            View Projects
+          </a>
+          <a
+            href="#contact"
+            class="bg-zinc-800 text-white font-semibold py-2.5 px-6 rounded-lg border border-white/20 hover:bg-zinc-700 transition inline-block"
+          >
+            Get in Touch
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Me heading + paragraphs -->
+    <h2 class="text-white font-bold text-3xl md:text-4xl mb-6">About Me</h2>
+    <div class="flex flex-col gap-4 text-left max-w-3xl">
+      <p class="text-white/90 text-base md:text-lg leading-relaxed">
+        I'm a Software Developer specializing in Full-Stack Web Development, passionate about
+        building fast and scalable applications. I regularly solve Data Structures and Algorithms
+        challenges to refine my logical thinking and problem-solving abilities.
+      </p>
+      <p class="text-white/90 text-base md:text-lg leading-relaxed">
+        I love turning ideas into scalable, user-friendly products that make an impact.
+      </p>
+    </div>
+  </div>
+</section>
