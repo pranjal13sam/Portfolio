@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  /** Set this to your deployed .NET API URL (e.g. from Render/Railway/Azure) so the contact form works. */
-  contactApiUrl: 'https://your-api-url.com/api/contact',
+  /** Formspree form – emails go to pandeypranjal264@gmail.com. Replace with your .NET API URL if you deploy the backend. */
+  contactApiUrl: 'https://formspree.io/f/mvzbkwrr',
 };

@@ -64,9 +64,23 @@ export class Contact implements OnDestroy {
       service ??
       '';
 
-    const body = { name, email, service: serviceLabel, message };
+    const isFormspree = CONTACT_API.includes('formspree.io');
+    const body = isFormspree
+      ? {
+          name,
+          email,
+          service: serviceLabel,
+          message,
+          _subject: `Portfolio contact: ${serviceLabel} – ${name}`,
+          _replyto: email,
+        }
+      : { name, email, service: serviceLabel, message };
 
-    this.http.post(CONTACT_API, body, { responseType: 'text' }).subscribe({
+    const options = isFormspree
+      ? { headers: { Accept: 'application/json' }, responseType: 'text' as const }
+      : { responseType: 'text' as const };
+
+    this.http.post(CONTACT_API, body, options).subscribe({
       next: () => {
         this.ngZone.run(() => {
           this.submitted = true;
