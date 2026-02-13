@@ -3,33 +3,37 @@ using Portfolio.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Controllers
 builder.Services.AddControllers();
 
+// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("PostgresConnection")
+    )
+);
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// ❌ Remove AddOpenApi (not supported in your setup)
 
+// CORS (IMPORTANT for Vercel frontend)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy
+            .WithOrigins(
+                "http://localhost:4200",
+                "https://localhost:4200",
+                "https://portfolio-gg7ilgs8g-pranjal13sams-projects.vercel.app"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+// ❌ Remove MapOpenApi()
 
 app.UseCors();
 
