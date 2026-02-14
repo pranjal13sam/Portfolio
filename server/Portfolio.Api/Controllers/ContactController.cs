@@ -44,11 +44,11 @@ public class ContactController : ControllerBase
             return StatusCode(500, "SMTP password missing. Set it: dotnet user-secrets set \"Smtp:Password\" \"xxxx\" OR in PowerShell: $env:Smtp__Password=\"xxxx\"; dotnet run");
 
         var host = _config["Smtp:Host"] ?? "smtp.gmail.com";
-        var port = _config.GetValue<int>("Smtp:Port", 465);
+        var port = _config.GetValue<int>("Smtp:Port", 587);
         // Gmail: use 465 + SSL (most reliable; 587 can cause 535 on some networks)
         if (host.Contains("gmail.com", StringComparison.OrdinalIgnoreCase))
         {
-            port = 465;
+            port = 587;
         }
         var userName = (_config["Smtp:UserName"] ?? ToEmail).Trim();
         _logger.LogInformation("SMTP: using {Host}:{Port}, user {User}, password length {Len}", host, port, userName, password.Length);
@@ -97,7 +97,7 @@ public class ContactController : ControllerBase
             client.ServerCertificateValidationCallback = (_, _, _, _) => true;
 
             // Gmail: 465 with SSL is more reliable than 587 StartTls on some networks
-            var useSsl = (port == 465);
+            var useSsl = (port == 587);
             await client.ConnectAsync(
                 host,
                 port,
