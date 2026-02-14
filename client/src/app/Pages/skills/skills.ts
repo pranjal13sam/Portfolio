@@ -28,7 +28,7 @@ export class Skills {
     { id: 'dotnet', name: '.NET' },
     { id: 'python', name: 'Python' },
     { id: 'fastapi', name: 'FastAPI' },
-    {id:'react',name:'React Native'}
+    {id:'react2',name:'React Native'}
   ];
 
   getIcon(id: string): string {

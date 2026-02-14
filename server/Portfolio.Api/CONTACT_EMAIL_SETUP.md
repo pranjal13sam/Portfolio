@@ -2,6 +2,10 @@
 
 The contact form sends submissions to **pandeypranjal264@gmail.com** via your .NET API using Gmail SMTP.
 
+## If you see "535 Username and Password not accepted"
+
+**You must use a Gmail App Password, not your normal Gmail password.** Google blocks normal passwords for SMTP. Follow the steps below to create an App Password and set it in the API.
+
 ## One-time setup (Gmail App Password)
 
 1. **Turn on 2-Step Verification** (if not already):

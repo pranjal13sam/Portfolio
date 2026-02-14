@@ -37,7 +37,9 @@ var app = builder.Build();
 
 app.UseCors();
 
-app.UseHttpsRedirection();
+// Only redirect to HTTPS when not in Development (avoids "Failed to determine the https port" when running without HTTPS)
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

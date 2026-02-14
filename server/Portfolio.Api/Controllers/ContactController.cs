@@ -37,13 +37,21 @@ public class ContactController : ControllerBase
             string.IsNullOrWhiteSpace(request?.Message))
             return BadRequest("Name, Email and Message are required.");
 
-        var password = _config["Smtp:Password"];
+        // Password: from config (user-secrets) or environment variable (works everywhere)
+        var password = _config["Smtp:Password"] ?? Environment.GetEnvironmentVariable("Smtp__Password");
+        password = password?.Trim()?.Replace(" ", "");
         if (string.IsNullOrWhiteSpace(password))
-            return StatusCode(500, "SMTP password missing");
+            return StatusCode(500, "SMTP password missing. Set it: dotnet user-secrets set \"Smtp:Password\" \"xxxx\" OR in PowerShell: $env:Smtp__Password=\"xxxx\"; dotnet run");
 
         var host = _config["Smtp:Host"] ?? "smtp.gmail.com";
-        var port = _config.GetValue<int>("Smtp:Port", 587);
-        var userName = _config["Smtp:UserName"] ?? ToEmail;
+        var port = _config.GetValue<int>("Smtp:Port", 465);
+        // Gmail: use 465 + SSL (most reliable; 587 can cause 535 on some networks)
+        if (host.Contains("gmail.com", StringComparison.OrdinalIgnoreCase))
+        {
+            port = 465;
+        }
+        var userName = (_config["Smtp:UserName"] ?? ToEmail).Trim();
+        _logger.LogInformation("SMTP: using {Host}:{Port}, user {User}, password length {Len}", host, port, userName, password.Length);
 
         // ✅ LOAD TEMPLATE
         var templatePath = Path.Combine(
@@ -86,12 +94,32 @@ public class ContactController : ControllerBase
         try
         {
             using var client = new SmtpClient();
-            await client.ConnectAsync(host, port, SecureSocketOptions.StartTls, cancellationToken);
-            await client.AuthenticateAsync(userName, password, cancellationToken);
+            client.ServerCertificateValidationCallback = (_, _, _, _) => true;
+
+            // Gmail: 465 with SSL is more reliable than 587 StartTls on some networks
+            var useSsl = (port == 465);
+            await client.ConnectAsync(
+                host,
+                port,
+                useSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls,
+                cancellationToken
+            );
+
+            await client.AuthenticateAsync(
+                System.Text.Encoding.UTF8,
+                new System.Net.NetworkCredential(userName, password),
+                cancellationToken
+            );
+
             await client.SendAsync(message, cancellationToken);
             await client.DisconnectAsync(true, cancellationToken);
-
+            _logger.LogInformation("Contact email sent successfully from {Email}", request.Email);
             return Ok();
+        }
+        catch (MailKit.Security.AuthenticationException ex)
+        {
+            _logger.LogError(ex, "Gmail rejected login. Use an App Password (not your normal password): https://myaccount.google.com/apppasswords");
+            return StatusCode(500, "Email login failed. Use a Gmail App Password – see server logs.");
         }
         catch (Exception ex)
         {
