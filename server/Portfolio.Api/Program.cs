@@ -6,6 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
+// HttpClient for Resend (email API – works on Render where SMTP ports are blocked)
+builder.Services.AddHttpClient("Resend", client =>
+{
+    client.BaseAddress = new Uri("https://api.resend.com/");
+});
+
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
@@ -24,7 +30,7 @@ builder.Services.AddCors(options =>
             .WithOrigins(
                 "http://localhost:4200",
                 "https://localhost:4200",
-                "https://portfolio-6twwtzw0w-pranjal13sams-projects.vercel.app"
+                "https://portfolio-fawn-tau-40.vercel.app"
             )
             .AllowAnyMethod()
             .AllowAnyHeader();
