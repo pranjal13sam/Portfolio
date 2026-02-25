@@ -6,7 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
-// HttpClient for Resend (email API – works on Render where SMTP ports are blocked)
+// HttpClient for SendGrid (email API – works on Render where SMTP ports are blocked)
+builder.Services.AddHttpClient("SendGrid", client =>
+{
+    client.BaseAddress = new Uri("https://api.sendgrid.com/");
+});
+// HttpClient for Resend (alternative email API)
 builder.Services.AddHttpClient("Resend", client =>
 {
     client.BaseAddress = new Uri("https://api.resend.com/");
@@ -38,6 +43,17 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Log which email provider is configured (helps debug Render env vars)
+var sendGridKey = builder.Configuration["SendGrid:ApiKey"] ?? builder.Configuration["SENDGRID_API_KEY"] ?? Environment.GetEnvironmentVariable("SendGrid__ApiKey") ?? Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+var resendKey = builder.Configuration["Resend:ApiKey"] ?? Environment.GetEnvironmentVariable("Resend__ApiKey");
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+if (!string.IsNullOrWhiteSpace(sendGridKey?.ToString()))
+    logger.LogInformation("Email: SendGrid configured");
+else if (!string.IsNullOrWhiteSpace(resendKey?.ToString()))
+    logger.LogInformation("Email: Resend configured");
+else
+    logger.LogWarning("Email: SendGrid/Resend not set. Contact form will use SMTP (fails on Render).");
 
 // ❌ Remove MapOpenApi()
 

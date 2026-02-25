@@ -2,29 +2,41 @@
 
 The contact form sends submissions to **pandeypranjal264@gmail.com** via your .NET API.
 
-- **On Render (production):** Use **Resend** (SMTP ports are blocked on Render, so Gmail SMTP will time out).
-- **Local:** You can use either Resend or Gmail SMTP.
+- **On Render (production):** Use **SendGrid** or Resend (SMTP ports are blocked on Render).
+- **Local:** You can use SendGrid, Resend, or Gmail SMTP.
 
 ---
 
-## Production on Render – use Resend
+## Production on Render – use SendGrid
 
-Render blocks outbound SMTP (ports 25, 465, 587), so direct Gmail SMTP will fail with a timeout. The API supports **Resend** over HTTPS instead.
+Render blocks outbound SMTP, so use SendGrid’s HTTPS API.
 
-1. **Sign up:** [resend.com](https://resend.com) (free tier: 100 emails/day).
-2. **Get API key:** Resend dashboard → API Keys → Create. Copy the key (starts with `re_`).
-3. **Set on Render:** In your Render service → Environment:
-   - Add: `Resend__ApiKey` = `re_your_api_key`
-   - Optional: `Resend__From` = `Portfolio Contact <onboarding@resend.dev>` (default). With a verified domain you can use e.g. `Portfolio <noreply@yourdomain.com>`.
-4. Redeploy. Contact form will send via Resend; emails still go to **pandeypranjal264@gmail.com**.
+1. **SendGrid:** Create an account at [sendgrid.com](https://sendgrid.com) and create an API key (Settings → API Keys → Create). Copy the key.
+2. **Verify sender (one-time):** All contact form messages are sent **to** you (pandeypranjal264@gmail.com). The email still has a “From” line (e.g. “Portfolio Contact”); SendGrid requires that address to be verified so they know you’re allowed to send as it. Use **your own email** as the verified sender: SendGrid → **Settings → Sender Authentication → Single Sender Verification → Create New**. Enter your name and **pandeypranjal264@gmail.com**. SendGrid will email that inbox a verification link; click it. After that, the API can send contact form emails to you with no further setup.
+3. **Set on Render:** In your Render service → Environment, add:
+   - `SendGrid__ApiKey` = `SG.your_actual_api_key`  
+   - Or use the name SendGrid often suggests: `SENDGRID_API_KEY` = `SG.your_actual_api_key`
+   - Optional: `SendGrid__From` = `pandeypranjal264@gmail.com` (defaults to your receive address). Must be a verified sender in SendGrid.
+   - Optional: `SendGrid__FromName` = `Portfolio Contact`
+4. **Redeploy.** Contact form will send via SendGrid to **pandeypranjal264@gmail.com**.
 
-If **Resend__ApiKey** is set, the API uses Resend. If not, it falls back to SMTP (for local dev).
+The API checks for SendGrid first (`SendGrid__ApiKey` or `SENDGRID_API_KEY`), then Resend, then SMTP.
+
+---
+
+## Production on Render – alternative: Resend
+
+You can use Resend instead of SendGrid.
+
+1. **Sign up:** [resend.com](https://resend.com). Get API key (starts with `re_`).
+2. **Set on Render:** `Resend__ApiKey` = `re_your_api_key`. Optional: `Resend__From` = `Portfolio Contact <onboarding@resend.dev>`.
+3. Redeploy.
 
 ---
 
 ## Local – Gmail SMTP (optional)
 
-If you don’t set `Resend__ApiKey`, the API uses Gmail SMTP (only works locally; use Resend on Render).
+If you don’t set `SendGrid__ApiKey`/`SENDGRID_API_KEY` or `Resend__ApiKey`, the API uses Gmail SMTP (only works locally; use SendGrid or Resend on Render).
 
 ### If you see "535 Username and Password not accepted"
 

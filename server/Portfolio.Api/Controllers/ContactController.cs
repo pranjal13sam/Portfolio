@@ -63,7 +63,52 @@ public class ContactController : ControllerBase
 
         var subject = $"Portfolio contact: {request.Service} – {request.Name}";
 
-        // ✅ Prefer Resend on Render (SMTP ports 25/465/587 are blocked there)
+        // ✅ SendGrid (works on Render) – try all possible env/config key names
+        var sendGridApiKey = (
+            _config["SendGrid:ApiKey"] ??
+            _config["SENDGRID_API_KEY"] ??
+            Environment.GetEnvironmentVariable("SendGrid__ApiKey") ??
+            Environment.GetEnvironmentVariable("SENDGRID_API_KEY")
+        )?.Trim();
+        _logger.LogInformation("SendGrid key present: {Present}", !string.IsNullOrEmpty(sendGridApiKey));
+        if (!string.IsNullOrEmpty(sendGridApiKey))
+        {
+            try
+            {
+                var fromEmail = (_config["SendGrid:From"] ?? Environment.GetEnvironmentVariable("SendGrid__From") ?? ToEmail).Trim();
+                var fromName = _config["SendGrid:FromName"] ?? "Portfolio Contact";
+                var payload = new
+                {
+                    personalizations = new[]
+                    {
+                        new { to = new[] { new { email = ToEmail } }, subject }
+                    },
+                    from = new { email = fromEmail, name = fromName },
+                    content = new[] { new { type = "text/html", value = html } },
+                    reply_to = new { email = request.Email, name = request.Name }
+                };
+                var httpClient = _httpClientFactory.CreateClient("SendGrid");
+                using var req = new HttpRequestMessage(HttpMethod.Post, "v3/mail/send");
+                req.Headers.TryAddWithoutValidation("Authorization", "Bearer " + sendGridApiKey);
+                req.Content = JsonContent.Create(payload);
+                var res = await httpClient.SendAsync(req, cancellationToken);
+                if (!res.IsSuccessStatusCode)
+                {
+                    var err = await res.Content.ReadAsStringAsync(cancellationToken);
+                    _logger.LogError("SendGrid API error {Code}: {Body}", res.StatusCode, err);
+                    return StatusCode(500, "Failed to send email.");
+                }
+                _logger.LogInformation("Contact email sent via SendGrid");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send contact email via SendGrid");
+                return StatusCode(500, "Failed to send email.");
+            }
+        }
+
+        // ✅ Resend (alternative; SMTP ports 25/465/587 are blocked on Render)
         var resendApiKey = (_config["Resend:ApiKey"] ?? Environment.GetEnvironmentVariable("Resend__ApiKey"))?.Trim();
         if (!string.IsNullOrEmpty(resendApiKey))
         {
@@ -100,6 +145,8 @@ public class ContactController : ControllerBase
         }
 
         // ✅ Fallback: SMTP (works locally; often blocked on Render/Heroku)
+        _logger.LogWarning(
+            "SendGrid and Resend API keys not set. Set SENDGRID_API_KEY (or SendGrid__ApiKey) on Render to use SendGrid. Using SMTP (will time out on Render).");
         var host = _config["Smtp:Host"] ?? "smtp.gmail.com";
         var port = _config.GetValue<int?>("Smtp:Port") ?? 587;
         var userName = (_config["Smtp:UserName"] ?? ToEmail).Trim();
