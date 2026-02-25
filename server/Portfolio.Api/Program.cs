@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
             .WithOrigins(
                 "http://localhost:4200",
                 "https://localhost:4200",
-                "https://portfolio-fawn-tau-40.vercel.app"
+                "https://portfolio-pranjalpandey.vercel.app"
             )
             .AllowAnyMethod()
             .AllowAnyHeader();
